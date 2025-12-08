@@ -4,52 +4,48 @@ import { Icon } from "astro-icon/components";
 
 const features = [
   {
-    title: "Bring Your Own Framework",
+    title: "Hardware Isolated",
     description:
-      "Build your site using React, Svelte, Vue, Preact, web components, or just plain ol' HTML + JavaScript.",
-    icon: "bx:bxs-briefcase",
+      "Each sandbox is a micro-VM with its own kernel. Not containers—real isolation.",
+    icon: "bx:bxs-shield",
   },
   {
-    title: "100% Static HTML, No JS",
+    title: "OCI Compatible",
     description:
-      "Astro renders your entire page to static HTML, removing all JavaScript from your final build by default.",
-    icon: "bx:bxs-window-alt",
+      "Use any Docker image. Fast startup with layer caching.",
+    icon: "bx:bxl-docker",
   },
   {
-    title: "On-Demand Components",
+    title: "Full Freedom Inside",
     description:
-      "Need some JS? Astro can automatically hydrate interactive components when they become visible on the page.  ",
-    icon: "bx:bxs-data",
+      "Complete Linux environment. Install anything. Nothing escapes.",
+    icon: "bx:bxs-terminal",
   },
   {
-    title: "Broad Integration",
+    title: "Batteries Included",
     description:
-      "Astro supports TypeScript, Scoped CSS, CSS Modules, Sass, Tailwind, Markdown, MDX, and any other npm packages.",
-    icon: "bx:bxs-bot",
+      "Networking, storage, and volumes—all built-in.",
+    icon: "bx:bxs-package",
   },
   {
-    title: "SEO Enabled",
+    title: "Cross-Platform",
     description:
-      "Automatic sitemaps, RSS feeds, pagination and collections take the pain out of SEO and syndication. It just works!",
-    icon: "bx:bxs-file-find",
+      "macOS Apple Silicon and Linux x86_64/ARM64.",
+    icon: "bx:bxs-devices",
   },
   {
-    title: "Community",
+    title: "Async-First",
     description:
-      "Astro is an open source project powered by hundreds of contributors making thousands of individual contributions.",
-    icon: "bx:bxs-user",
+      "Non-blocking I/O with real-time streaming.",
+    icon: "bx:bxs-zap",
   },
 ];
 ---
 
-<div class="mt-16 md:mt-0">
+<div class="mt-16 md:mt-0 text-center">
   <h2 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">
-    Everything you need to start a website
+    Features
   </h2>
-  <p class="text-lg mt-4 text-slate-600">
-    Astro comes batteries included. It takes the best parts of state-of-the-art
-    tools and adds its own innovations.
-  </p>
 </div>
 
 <div class="grid sm:grid-cols-2 md:grid-cols-3 mt-16 gap-16">
