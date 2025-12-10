@@ -1,43 +1,35 @@
 ---
-import { Image } from "astro:assets";
+import { Picture } from "astro:assets";
 import heroImage from "@/assets/hero.png";
 import Link from "@/components/ui/link.astro";
 import { Icon } from "astro-icon/components";
 ---
 
-<main class="grid md:grid-cols-2 gap-8 place-items-center pt-16 pb-8 md:pt-12 md:pb-24">
-  <div>
-    <h1
-      class="text-5xl lg:text-6xl xl:text-7xl font-bold lg:tracking-tight xl:tracking-tighter">
-      Embed. Sandbox. Ship.
-    </h1>
-    <p class="text-lg mt-4 text-slate-600 max-w-xl">
-      A single library for AI agent isolation. No daemon, no dependencies—just import and sandbox.
-    </p>
-    <div class="mt-6 flex flex-col sm:flex-row gap-3">
-      <Link
-        href="https://github.com/boxlite-labs/boxlite-python-examples"
-        target="_blank"
-        class="flex gap-1 items-center justify-center"
-        rel="noopener">
-        <Icon class="text-white w-5 h-5" name="bx:bxs-rocket" />
-        Get Started
-      </Link>
-      <span
-        class="flex gap-1 items-center justify-center px-5 py-2.5 rounded-md border-2 border-gray-300 text-gray-400 cursor-not-allowed hover:border-gray-400 transition-colors"
-        title="GitHub repository coming soon">
-        <Icon class="w-4 h-4" name="bx:bxl-github" />
-        Coming Soon
-      </span>
-    </div>
-  </div>
-  <div class="hidden md:flex justify-center">
-    <Image
-      src={heroImage}
-      alt="BoxLite"
-      width={320}
-      height={320}
-      class="w-[320px] h-auto"
-    />
+<main class="flex flex-col items-center text-center pt-16 pb-8 md:pt-20 md:pb-24">
+  <h1
+    class="text-5xl lg:text-6xl xl:text-7xl font-bold lg:tracking-tight xl:tracking-tighter">
+    Embed. Sandbox. Ship.
+  </h1>
+  <p class="text-lg mt-4 text-slate-600 max-w-xl">
+    A single library for AI agent isolation. No daemon, no dependencies—just import and sandbox.
+  </p>
+  <div class="mt-6 flex flex-col sm:flex-row gap-3">
+    <Link
+      href="https://github.com/boxlite-labs/boxlite-python-examples"
+      target="_blank"
+      class="flex gap-1 items-center justify-center"
+      rel="noopener">
+      <Icon class="text-white w-5 h-5" name="bx:bxs-rocket" />
+      Get Started
+    </Link>
+    <Link
+      size="lg"
+      style="outline"
+      rel="noopener"
+      href="#"
+      class="flex gap-1 items-center justify-center cursor-not-allowed opacity-60">
+      <Icon class="text-black w-4 h-4" name="bx:bxl-github" />
+      Coming Soon
+    </Link>
   </div>
 </main>
