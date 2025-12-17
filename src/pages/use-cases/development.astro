@@ -1,0 +1,206 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import { Icon } from "astro-icon/components";
+
+const pageDescription = "Use BoxLite for development environments. Run Linux tools on macOS with native Apple Silicon performance. No Docker Desktop required. Perfect for local dev, CI/CD, and testing.";
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Development Environments with BoxLite",
+  "description": pageDescription,
+  "author": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  }
+};
+---
+
+<Layout
+  title="Development Environments"
+  description={pageDescription}
+  schema={articleSchema}
+  breadcrumbs={[
+    { name: "Home", url: "/website" },
+    { name: "Use Cases", url: "/website/use-cases" },
+    { name: "Development Environments", url: "/website/use-cases/development" }
+  ]}
+>
+  <Container>
+    <div class="max-w-4xl mx-auto py-16">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-slate-500 mb-8">
+        <a href="/website" class="hover:text-indigo-600">Home</a>
+        <span class="mx-2">/</span>
+        <a href="/website/use-cases" class="hover:text-indigo-600">Use Cases</a>
+        <span class="mx-2">/</span>
+        <span class="text-slate-700">Development Environments</span>
+      </nav>
+
+      <!-- Title -->
+      <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        Development Environments
+      </h1>
+
+      <p class="text-xl text-slate-600 mb-8">
+        Fast, consistent dev environments without Docker Desktop
+      </p>
+
+      <!-- TL;DR -->
+      <div class="bg-teal-50 border-l-4 border-teal-500 p-6 mb-12">
+        <h2 class="font-bold text-lg text-teal-900 mb-2">TL;DR</h2>
+        <p class="text-teal-800">
+          BoxLite provides lightweight Linux environments for development. On macOS with Apple Silicon,
+          it runs Linux workloads at near-native speed using Virtualization.framework. No Docker Desktop
+          license needed, sub-second startup times, and full compatibility with OCI images.
+        </p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="prose prose-lg max-w-none">
+        <h2>Why BoxLite for Development?</h2>
+        <p>
+          Developers often need Linux environments for:
+        </p>
+        <ul>
+          <li>Running production-like environments locally</li>
+          <li>Testing against specific Linux distributions</li>
+          <li>Running Linux-only tools on macOS</li>
+          <li>Isolating project dependencies</li>
+        </ul>
+        <p>
+          BoxLite provides these environments with minimal overhead and maximum speed.
+        </p>
+
+        <h2>BoxLite vs Docker Desktop</h2>
+        <div class="grid md:grid-cols-2 gap-4 my-6 not-prose">
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Startup Time</h3>
+            <p class="text-sm text-slate-600 mt-1">BoxLite: ~100ms vs Docker: seconds</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">License</h3>
+            <p class="text-sm text-slate-600 mt-1">BoxLite: Open source vs Docker Desktop: Paid for commercial use</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Apple Silicon</h3>
+            <p class="text-sm text-slate-600 mt-1">BoxLite: Native ARM via Virtualization.framework</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Resource Usage</h3>
+            <p class="text-sm text-slate-600 mt-1">BoxLite: Minimal overhead vs Docker: VM + daemon</p>
+          </div>
+        </div>
+
+        <h2>Quick Start</h2>
+        <div class="bg-slate-900 rounded-lg p-4 my-4 not-prose">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code><span class="text-slate-500"># Install BoxLite</span>
+pip install boxlite
+
+<span class="text-slate-500"># Run a command in an Ubuntu environment</span>
+boxlite run ubuntu:22.04 -- apt-get update
+
+<span class="text-slate-500"># Start an interactive shell</span>
+boxlite shell python:3.12
+
+<span class="text-slate-500"># Run your project's tests in isolation</span>
+boxlite run node:20 -- npm test</code></pre>
+        </div>
+
+        <h2>Use Cases</h2>
+
+        <h3>Local Development</h3>
+        <p>
+          Run your application in a production-like Linux environment while developing on macOS:
+        </p>
+        <div class="bg-slate-900 rounded-lg p-4 my-4 not-prose">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code><span class="text-purple-400">import</span> boxlite
+
+<span class="text-purple-400">async def</span> <span class="text-blue-400">dev_environment</span>():
+    <span class="text-purple-400">async with</span> boxlite.SimpleBox(
+        image=<span class="text-green-400">"python:3.12"</span>,
+        mounts=[<span class="text-green-400">"./src:/app"</span>],  <span class="text-slate-500"># Mount source code</span>
+        ports=[<span class="text-green-400">"8000:8000"</span>]     <span class="text-slate-500"># Expose dev server</span>
+    ) <span class="text-purple-400">as</span> box:
+        <span class="text-purple-400">await</span> box.exec(<span class="text-green-400">"pip"</span>, <span class="text-green-400">"install"</span>, <span class="text-green-400">"-r"</span>, <span class="text-green-400">"/app/requirements.txt"</span>)
+        <span class="text-purple-400">await</span> box.exec(<span class="text-green-400">"python"</span>, <span class="text-green-400">"/app/manage.py"</span>, <span class="text-green-400">"runserver"</span>)</code></pre>
+        </div>
+
+        <h3>CI/CD Pipelines</h3>
+        <p>
+          Run build and test steps in isolated environments:
+        </p>
+        <ul>
+          <li>Each step runs in a fresh VM</li>
+          <li>No state leakage between jobs</li>
+          <li>Consistent environments across local and CI</li>
+          <li>Easy parallelization</li>
+        </ul>
+
+        <h3>Build Environments</h3>
+        <p>
+          Build software with specific toolchains:
+        </p>
+        <ul>
+          <li>Cross-compile for different architectures</li>
+          <li>Use specific compiler versions</li>
+          <li>Build reproducibly with pinned dependencies</li>
+          <li>Isolate build artifacts</li>
+        </ul>
+
+        <h3>Testing Sandboxes</h3>
+        <p>
+          Run tests in isolated environments:
+        </p>
+        <ul>
+          <li>Test against multiple Linux distributions</li>
+          <li>Run integration tests with real services</li>
+          <li>Test destructive operations safely</li>
+          <li>Parallel test execution with isolation</li>
+        </ul>
+
+        <h2>OCI Image Compatibility</h2>
+        <p>
+          BoxLite runs standard OCI/Docker images. Use existing images from Docker Hub,
+          GitHub Container Registry, or your private registry:
+        </p>
+        <div class="bg-slate-900 rounded-lg p-4 my-4 not-prose">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code><span class="text-slate-500"># Official images</span>
+boxlite run python:3.12-slim -- python --version
+boxlite run node:20-alpine -- node --version
+boxlite run golang:1.21 -- go version
+
+<span class="text-slate-500"># Custom images</span>
+boxlite run ghcr.io/myorg/myimage:latest -- ./run.sh</code></pre>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 p-8 bg-slate-100 rounded-lg text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Ready for faster dev environments?</h2>
+        <p class="text-slate-600 mb-6">Get started with BoxLite in minutes.</p>
+        <div class="flex justify-center gap-4 flex-wrap">
+          <a
+            href="https://github.com/boxlite-labs/boxlite-python-examples"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+          >
+            View Examples
+          </a>
+          <a
+            href="/website/compare/docker"
+            class="inline-flex items-center px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition"
+          >
+            BoxLite vs Docker
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>

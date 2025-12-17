@@ -1,0 +1,201 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import { Icon } from "astro-icon/components";
+
+const pageDescription = "Use BoxLite for secure code execution. Run untrusted user code in hardware-isolated sandboxes. Perfect for online judges, coding platforms, educational tools, and code playgrounds.";
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Secure Code Execution with BoxLite",
+  "description": pageDescription,
+  "author": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  }
+};
+---
+
+<Layout
+  title="Secure Code Execution"
+  description={pageDescription}
+  schema={articleSchema}
+  breadcrumbs={[
+    { name: "Home", url: "/website" },
+    { name: "Use Cases", url: "/website/use-cases" },
+    { name: "Secure Code Execution", url: "/website/use-cases/code-execution" }
+  ]}
+>
+  <Container>
+    <div class="max-w-4xl mx-auto py-16">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-slate-500 mb-8">
+        <a href="/website" class="hover:text-indigo-600">Home</a>
+        <span class="mx-2">/</span>
+        <a href="/website/use-cases" class="hover:text-indigo-600">Use Cases</a>
+        <span class="mx-2">/</span>
+        <span class="text-slate-700">Secure Code Execution</span>
+      </nav>
+
+      <!-- Title -->
+      <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        Secure Code Execution
+      </h1>
+
+      <p class="text-xl text-slate-600 mb-8">
+        Run untrusted code safely in hardware-isolated sandboxes
+      </p>
+
+      <!-- TL;DR -->
+      <div class="bg-green-50 border-l-4 border-green-500 p-6 mb-12">
+        <h2 class="font-bold text-lg text-green-900 mb-2">TL;DR</h2>
+        <p class="text-green-800">
+          Running user-submitted code is inherently risky. Users might (intentionally or accidentally) submit malicious code,
+          fork bombs, or resource hogs. BoxLite lets you execute arbitrary code in hardware-isolated micro-VMs where even
+          kernel exploits can't escape to your host. Each submission runs in a fresh, isolated environment.
+        </p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="prose prose-lg max-w-none">
+        <h2>Who Needs Secure Code Execution?</h2>
+
+        <div class="grid md:grid-cols-2 gap-4 my-6 not-prose">
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Online Judges</h3>
+            <p class="text-sm text-slate-600 mt-1">LeetCode-style platforms that evaluate user solutions</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Code Playgrounds</h3>
+            <p class="text-sm text-slate-600 mt-1">Interactive environments like CodePen, Replit, or JSFiddle</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Educational Platforms</h3>
+            <p class="text-sm text-slate-600 mt-1">Coding bootcamps and tutorial sites with runnable examples</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">API Services</h3>
+            <p class="text-sm text-slate-600 mt-1">Code execution APIs for third-party integrations</p>
+          </div>
+        </div>
+
+        <h2>Common Attack Vectors</h2>
+        <p>
+          When accepting code from untrusted sources, you need to defend against:
+        </p>
+        <ul>
+          <li><strong>Fork bombs:</strong> <code>:(){"{"} :|:& {"}"};:</code> - crashes systems via process exhaustion</li>
+          <li><strong>Resource exhaustion:</strong> Memory allocation loops, disk filling</li>
+          <li><strong>Data exfiltration:</strong> Sending environment variables or secrets to external servers</li>
+          <li><strong>Container escapes:</strong> Exploiting kernel vulnerabilities to break out of isolation</li>
+          <li><strong>Cryptomining:</strong> Using your compute resources for cryptocurrency mining</li>
+        </ul>
+
+        <h2>How BoxLite Protects You</h2>
+        <div class="bg-slate-900 rounded-lg p-4 my-4 not-prose">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code><span class="text-purple-400">import</span> boxlite
+
+<span class="text-purple-400">async def</span> <span class="text-blue-400">run_user_code</span>(code: str, language: str) -> dict:
+    <span class="text-purple-400">async with</span> boxlite.SimpleBox(
+        image=get_image(language),
+        memory_mb=<span class="text-yellow-400">256</span>,       <span class="text-slate-500"># Limit memory</span>
+        cpus=<span class="text-yellow-400">1</span>,               <span class="text-slate-500"># Limit CPU</span>
+    ) <span class="text-purple-400">as</span> box:
+        <span class="text-purple-400">try</span>:
+            result = <span class="text-purple-400">await</span> asyncio.wait_for(
+                box.exec(<span class="text-green-400">"python"</span>, <span class="text-green-400">"-c"</span>, code),
+                timeout=<span class="text-yellow-400">10.0</span>   <span class="text-slate-500"># 10 second timeout</span>
+            )
+            <span class="text-purple-400">return</span> {"{"}
+                <span class="text-green-400">"success"</span>: result.exit_code == <span class="text-yellow-400">0</span>,
+                <span class="text-green-400">"output"</span>: result.stdout,
+                <span class="text-green-400">"error"</span>: result.stderr
+            {"}"}
+        <span class="text-purple-400">except</span> asyncio.TimeoutError:
+            <span class="text-purple-400">return</span> {"{"}<span class="text-green-400">"success"</span>: <span class="text-purple-400">False</span>, <span class="text-green-400">"error"</span>: <span class="text-green-400">"Execution timed out"</span>{"}"}</code></pre>
+        </div>
+
+        <h2>Defense in Depth</h2>
+        <p>
+          BoxLite provides multiple layers of protection:
+        </p>
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th class="text-left">Attack</th>
+              <th class="text-left">Protection</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fork bombs</td>
+              <td>Process limits + cgroup constraints inside VM</td>
+            </tr>
+            <tr>
+              <td>Memory exhaustion</td>
+              <td>Hard memory limit per sandbox</td>
+            </tr>
+            <tr>
+              <td>Infinite loops</td>
+              <td>Configurable execution timeout</td>
+            </tr>
+            <tr>
+              <td>Network attacks</td>
+              <td>Isolated network (or disabled entirely)</td>
+            </tr>
+            <tr>
+              <td>Container escapes</td>
+              <td>VM boundary (separate kernel)</td>
+            </tr>
+            <tr>
+              <td>Host filesystem access</td>
+              <td>No host mounts by default</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Multi-Language Support</h2>
+        <p>
+          BoxLite runs any OCI/Docker image, so you can support any language:
+        </p>
+        <div class="bg-slate-900 rounded-lg p-4 my-4 not-prose">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code>LANGUAGE_IMAGES = {"{"}
+    <span class="text-green-400">"python"</span>: <span class="text-green-400">"python:3.12-slim"</span>,
+    <span class="text-green-400">"javascript"</span>: <span class="text-green-400">"node:20-slim"</span>,
+    <span class="text-green-400">"rust"</span>: <span class="text-green-400">"rust:1.75-slim"</span>,
+    <span class="text-green-400">"go"</span>: <span class="text-green-400">"golang:1.21-alpine"</span>,
+    <span class="text-green-400">"java"</span>: <span class="text-green-400">"openjdk:21-slim"</span>,
+    <span class="text-green-400">"cpp"</span>: <span class="text-green-400">"gcc:13"</span>,
+{"}"}</code></pre>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 p-8 bg-slate-100 rounded-lg text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Build a secure code execution platform</h2>
+        <p class="text-slate-600 mb-6">Get started with BoxLite in minutes.</p>
+        <div class="flex justify-center gap-4 flex-wrap">
+          <a
+            href="https://github.com/boxlite-labs/boxlite-python-examples"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+          >
+            View Examples
+          </a>
+          <a
+            href="/website/faq"
+            class="inline-flex items-center px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition"
+          >
+            Read FAQ
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>

@@ -1,0 +1,178 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import { Icon } from "astro-icon/components";
+
+const pageDescription = "Use BoxLite for secure browser automation. Run Puppeteer, Playwright, and Selenium in isolated sandboxes. Perfect for web scraping, E2E testing, and screenshot services.";
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Browser Automation with BoxLite",
+  "description": pageDescription,
+  "author": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  }
+};
+---
+
+<Layout
+  title="Browser Automation"
+  description={pageDescription}
+  schema={articleSchema}
+  breadcrumbs={[
+    { name: "Home", url: "/website" },
+    { name: "Use Cases", url: "/website/use-cases" },
+    { name: "Browser Automation", url: "/website/use-cases/browser-automation" }
+  ]}
+>
+  <Container>
+    <div class="max-w-4xl mx-auto py-16">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-slate-500 mb-8">
+        <a href="/website" class="hover:text-indigo-600">Home</a>
+        <span class="mx-2">/</span>
+        <a href="/website/use-cases" class="hover:text-indigo-600">Use Cases</a>
+        <span class="mx-2">/</span>
+        <span class="text-slate-700">Browser Automation</span>
+      </nav>
+
+      <!-- Title -->
+      <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        Browser Automation
+      </h1>
+
+      <p class="text-xl text-slate-600 mb-8">
+        Run browser automation in isolated, reproducible sandboxes
+      </p>
+
+      <!-- TL;DR -->
+      <div class="bg-orange-50 border-l-4 border-orange-500 p-6 mb-12">
+        <h2 class="font-bold text-lg text-orange-900 mb-2">TL;DR</h2>
+        <p class="text-orange-800">
+          Browser automation is notoriously flaky and resource-hungry. BoxLite provides isolated micro-VMs where
+          each browser instance runs in a clean environment with consistent behavior. No more "works on my machine"
+          issues, no cross-test contamination, and strong isolation from potentially malicious web content.
+        </p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="prose prose-lg max-w-none">
+        <h2>Why Isolate Browser Automation?</h2>
+        <p>
+          Browser automation workloads have unique challenges:
+        </p>
+        <ul>
+          <li><strong>State contamination:</strong> Cookies, localStorage, and cache can leak between tests</li>
+          <li><strong>Resource conflicts:</strong> Multiple browser instances competing for memory and CPU</li>
+          <li><strong>Security risks:</strong> Visiting untrusted URLs can expose your system to attacks</li>
+          <li><strong>Reproducibility:</strong> Different OS configurations cause flaky tests</li>
+        </ul>
+
+        <h2>Supported Frameworks</h2>
+        <div class="grid md:grid-cols-2 gap-4 my-6 not-prose">
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Puppeteer</h3>
+            <p class="text-sm text-slate-600 mt-1">Google's Node.js library for Chrome/Chromium automation</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Playwright</h3>
+            <p class="text-sm text-slate-600 mt-1">Microsoft's cross-browser automation with built-in parallelism</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Selenium</h3>
+            <p class="text-sm text-slate-600 mt-1">Industry-standard WebDriver protocol support</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Cypress</h3>
+            <p class="text-sm text-slate-600 mt-1">Modern E2E testing framework with time-travel debugging</p>
+          </div>
+        </div>
+
+        <h2>How to Run Browsers in BoxLite</h2>
+        <p>
+          BoxLite provides a dedicated browser sandbox with Chrome DevTools Protocol (CDP) access:
+        </p>
+        <div class="bg-slate-900 rounded-lg p-4 my-4 not-prose">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code><span class="text-purple-400">import</span> boxlite
+<span class="text-purple-400">from</span> playwright.async_api <span class="text-purple-400">import</span> async_playwright
+
+<span class="text-purple-400">async def</span> <span class="text-blue-400">screenshot_url</span>(url: str) -> bytes:
+    <span class="text-slate-500"># Start isolated browser sandbox</span>
+    <span class="text-purple-400">async with</span> boxlite.BrowserBox() <span class="text-purple-400">as</span> browser_box:
+        cdp_url = browser_box.cdp_endpoint
+
+        <span class="text-purple-400">async with</span> async_playwright() <span class="text-purple-400">as</span> p:
+            browser = <span class="text-purple-400">await</span> p.chromium.connect_over_cdp(cdp_url)
+            page = <span class="text-purple-400">await</span> browser.new_page()
+            <span class="text-purple-400">await</span> page.goto(url)
+            screenshot = <span class="text-purple-400">await</span> page.screenshot()
+            <span class="text-purple-400">return</span> screenshot</code></pre>
+        </div>
+
+        <h2>Common Use Cases</h2>
+
+        <h3>Web Scraping</h3>
+        <p>
+          When scraping untrusted websites, malicious JavaScript could attempt to exploit browser vulnerabilities.
+          BoxLite's VM isolation ensures any exploit is contained within the sandbox.
+        </p>
+
+        <h3>E2E Testing</h3>
+        <p>
+          Each test runs in a fresh VM with a clean browser state. No more flaky tests from leftover cookies
+          or cached data. Tests are fully reproducible across environments.
+        </p>
+
+        <h3>Screenshot Services</h3>
+        <p>
+          Render URLs to images safely. Users can submit any URL without risking your infrastructure.
+          Perfect for link previews, social cards, and PDF generation.
+        </p>
+
+        <h3>Parallel Testing</h3>
+        <p>
+          Spin up multiple browser sandboxes in parallel. Each has isolated resources and network,
+          eliminating interference between concurrent tests.
+        </p>
+
+        <h2>Why Not Just Use Docker?</h2>
+        <p>
+          Docker containers share the host kernel. A browser exploit combined with a container escape
+          could compromise your host. BoxLite's VM boundary provides much stronger isolation—even kernel
+          exploits are contained.
+        </p>
+        <p>
+          <a href="/website/compare/docker" class="text-indigo-600 hover:underline">Learn more about BoxLite vs Docker →</a>
+        </p>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 p-8 bg-slate-100 rounded-lg text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Ready to isolate your browser automation?</h2>
+        <p class="text-slate-600 mb-6">Get started with BoxLite's browser sandboxes.</p>
+        <div class="flex justify-center gap-4 flex-wrap">
+          <a
+            href="https://github.com/boxlite-labs/boxlite-python-examples"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+          >
+            View Examples
+          </a>
+          <a
+            href="/website/faq"
+            class="inline-flex items-center px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition"
+          >
+            Read FAQ
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>

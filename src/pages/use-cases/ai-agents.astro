@@ -1,0 +1,177 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import { Icon } from "astro-icon/components";
+
+const pageDescription = "Use BoxLite for AI agent sandboxing. Run AI-generated code from Claude, GPT, AutoGPT, and other LLMs safely in hardware-isolated micro-VMs. Prevent AI mistakes from affecting your system.";
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "AI Agent Sandboxing with BoxLite",
+  "description": pageDescription,
+  "author": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  }
+};
+---
+
+<Layout
+  title="AI Agent Sandboxing"
+  description={pageDescription}
+  schema={articleSchema}
+  breadcrumbs={[
+    { name: "Home", url: "/website" },
+    { name: "Use Cases", url: "/website/use-cases" },
+    { name: "AI Agent Sandboxing", url: "/website/use-cases/ai-agents" }
+  ]}
+>
+  <Container>
+    <div class="max-w-4xl mx-auto py-16">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-slate-500 mb-8">
+        <a href="/website" class="hover:text-indigo-600">Home</a>
+        <span class="mx-2">/</span>
+        <a href="/website/use-cases" class="hover:text-indigo-600">Use Cases</a>
+        <span class="mx-2">/</span>
+        <span class="text-slate-700">AI Agent Sandboxing</span>
+      </nav>
+
+      <!-- Title -->
+      <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        AI Agent Sandboxing
+      </h1>
+
+      <p class="text-xl text-slate-600 mb-8">
+        Run AI-generated code safely in hardware-isolated micro-VMs
+      </p>
+
+      <!-- TL;DR -->
+      <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 mb-12">
+        <h2 class="font-bold text-lg text-indigo-900 mb-2">TL;DR</h2>
+        <p class="text-indigo-800">
+          AI agents like Claude, GPT, and AutoGPT generate code that needs to be executed. But running AI-generated code
+          directly on your system is dangerous—one hallucination could delete files or expose secrets. BoxLite provides
+          hardware-isolated sandboxes where AI agents have full Linux freedom but cannot escape to affect your host system.
+        </p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="prose prose-lg max-w-none">
+        <h2>The AI Agent Execution Problem</h2>
+        <p>
+          Modern AI agents are incredibly capable, but they're not perfect. When an AI agent executes code:
+        </p>
+        <ul>
+          <li>It might misunderstand the task and run destructive commands</li>
+          <li>Prompt injection attacks could make it execute malicious code</li>
+          <li>It might install packages with security vulnerabilities</li>
+          <li>Edge cases could cause infinite loops or resource exhaustion</li>
+        </ul>
+        <p>
+          Without sandboxing, any of these could compromise your system. With BoxLite, they're contained.
+        </p>
+
+        <h2>Compatible AI Agents</h2>
+        <div class="grid md:grid-cols-2 gap-4 my-6 not-prose">
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Claude Computer Use</h3>
+            <p class="text-sm text-slate-600 mt-1">Anthropic's Claude with computer interaction capabilities</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">GPT Code Interpreter</h3>
+            <p class="text-sm text-slate-600 mt-1">OpenAI's code execution environment</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">AutoGPT / BabyAGI</h3>
+            <p class="text-sm text-slate-600 mt-1">Autonomous agent frameworks</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">LangChain Agents</h3>
+            <p class="text-sm text-slate-600 mt-1">LangChain-based agent implementations</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">AI Coding Assistants</h3>
+            <p class="text-sm text-slate-600 mt-1">Cursor, Copilot, Aider, and similar tools</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Custom LLM Agents</h3>
+            <p class="text-sm text-slate-600 mt-1">Your own agent implementations</p>
+          </div>
+        </div>
+
+        <h2>How to Use BoxLite with AI Agents</h2>
+        <p>
+          Integration is straightforward. Here's a Python example:
+        </p>
+        <div class="bg-slate-900 rounded-lg p-4 my-4 not-prose">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code><span class="text-purple-400">import</span> boxlite
+<span class="text-purple-400">from</span> anthropic <span class="text-purple-400">import</span> Anthropic
+
+client = Anthropic()
+
+<span class="text-purple-400">async def</span> <span class="text-blue-400">execute_ai_code</span>(prompt: str) -> str:
+    <span class="text-slate-500"># Get code from AI</span>
+    response = client.messages.create(
+        model=<span class="text-green-400">"claude-3-opus-20240229"</span>,
+        messages=[{"{"}<span class="text-green-400">"role"</span>: <span class="text-green-400">"user"</span>, <span class="text-green-400">"content"</span>: prompt{"}"}]
+    )
+    code = extract_code(response)
+
+    <span class="text-slate-500"># Execute in isolated sandbox</span>
+    <span class="text-purple-400">async with</span> boxlite.CodeBox() <span class="text-purple-400">as</span> box:
+        result = <span class="text-purple-400">await</span> box.run(code)
+        <span class="text-purple-400">return</span> result.stdout</code></pre>
+        </div>
+
+        <h2>Security Guarantees</h2>
+        <p>
+          When AI code runs in BoxLite:
+        </p>
+        <ul>
+          <li><strong>Hardware isolation:</strong> Each sandbox runs in its own micro-VM with a separate kernel</li>
+          <li><strong>No host access:</strong> The sandbox cannot see or modify your host filesystem</li>
+          <li><strong>Network isolation:</strong> Controlled network access (enable only if needed)</li>
+          <li><strong>Resource limits:</strong> CPU and memory limits prevent resource exhaustion</li>
+          <li><strong>Timeout protection:</strong> Long-running code is automatically terminated</li>
+        </ul>
+
+        <h2>Why Not Docker?</h2>
+        <p>
+          Docker containers share the host kernel. Container escape vulnerabilities (like CVE-2024-21626) could let
+          malicious AI-generated code break out to your host. BoxLite's VM boundary is much harder to escape.
+        </p>
+        <p>
+          <a href="/website/compare/docker" class="text-indigo-600 hover:underline">Read the full BoxLite vs Docker comparison →</a>
+        </p>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 p-8 bg-slate-100 rounded-lg text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Ready to sandbox your AI agents?</h2>
+        <p class="text-slate-600 mb-6">Get started with BoxLite in minutes.</p>
+        <div class="flex justify-center gap-4 flex-wrap">
+          <a
+            href="/website/guides/ai-agent-sandboxing"
+            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+          >
+            Read the Guide
+          </a>
+          <a
+            href="https://github.com/boxlite-labs/boxlite-python-examples"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition"
+          >
+            View Examples
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>

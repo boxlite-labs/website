@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: http://astroship.web3templates.com/sitemap-index.xml
+# BoxLite - Embeddable VM runtime for secure AI agent isolation
+Sitemap: https://boxlite-labs.github.io/website/sitemap-index.xml

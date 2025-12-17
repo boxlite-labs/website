@@ -9,23 +9,30 @@ import Sectionhead from "@/components/sectionhead.astro";
 const publishedTeamMembers = await getCollection("team", ({ data }) => {
   return !data.draft && data.publishDate < new Date();
 });
+
+const pageDescription = "Meet the BoxLite Labs team building secure sandboxing infrastructure for AI agents. We're creating hardware-isolated micro-VM technology to make running untrusted code safe.";
 ---
 
-<Layout title="About">
+<Layout title="About" description={pageDescription}>
   <Container>
     <Sectionhead>
-      <Fragment slot="title">About</Fragment>
-      <Fragment slot="desc">We are a small passionate team.</Fragment>
+      <Fragment slot="title">About BoxLite Labs</Fragment>
+      <Fragment slot="desc">Building secure sandboxing infrastructure for AI agents</Fragment>
     </Sectionhead>
 
     <div class="flex flex-col gap-3 mx-auto max-w-4xl mt-16">
       <h2 class="font-bold text-3xl text-gray-800">
-        Empowering the world with Astro.
+        Why We Built BoxLite
       </h2>
       <p class="text-lg leading-relaxed text-slate-500">
-        We're a multi-cultural team from around the world! We come from diverse
-        backgrounds, bringing different personalities, experiences and skills to
-        the job. This is what makes our team so special.
+        As AI agents become more capable, they need to execute code, browse the web, and interact with systems.
+        But running AI-generated code is inherently risky—one mistake could compromise your entire system.
+        We built BoxLite to solve this: hardware-isolated sandboxes that give AI agents full freedom while
+        guaranteeing they can never escape to the host.
+      </p>
+      <p class="text-lg leading-relaxed text-slate-500 mt-4">
+        Our philosophy follows SQLite: no daemon, no complex setup, just import a library and sandbox.
+        BoxLite makes secure AI execution as simple as <code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm">pip install boxlite</code>.
       </p>
     </div>
     <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-12">

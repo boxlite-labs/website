@@ -1,0 +1,74 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import Sectionhead from "@/components/sectionhead.astro";
+import { Icon } from "astro-icon/components";
+
+const guides = [
+  {
+    title: "How to Sandbox AI Agents Safely",
+    description: "Complete guide to running AI-generated code in hardware-isolated micro-VMs. Covers security risks, implementation patterns, and best practices.",
+    href: "/guides/ai-agent-sandboxing",
+    icon: "bx:bxs-bot",
+    category: "Security"
+  }
+];
+
+const pageDescription = "BoxLite guides and tutorials for secure sandboxing. Learn how to sandbox AI agents, execute untrusted code safely, and build secure code execution platforms.";
+---
+
+<Layout title="Guides" description={pageDescription}>
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">BoxLite Guides</Fragment>
+      <Fragment slot="desc">
+        Learn how to use BoxLite for secure sandboxing
+      </Fragment>
+    </Sectionhead>
+
+    <div class="max-w-4xl mx-auto mt-16">
+      <!-- Guide Cards -->
+      <div class="grid gap-6">
+        {guides.map((guide) => (
+          <a href={guide.href} class="block group">
+            <div class="border border-slate-200 rounded-lg p-6 hover:border-indigo-300 hover:shadow-md transition">
+              <div class="flex items-start gap-4">
+                <div class="bg-indigo-100 rounded-lg p-3 group-hover:bg-indigo-200 transition">
+                  <Icon class="w-6 h-6 text-indigo-600" name={guide.icon} />
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-3">
+                    <h3 class="font-semibold text-xl text-gray-800 group-hover:text-indigo-600 transition">
+                      {guide.title}
+                    </h3>
+                    <span class="px-2 py-1 text-xs font-medium bg-slate-100 text-slate-600 rounded">
+                      {guide.category}
+                    </span>
+                  </div>
+                  <p class="text-slate-600 mt-2">{guide.description}</p>
+                </div>
+                <Icon class="w-5 h-5 text-slate-400 group-hover:text-indigo-600 transition" name="bx:bx-chevron-right" />
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Coming Soon -->
+      <div class="mt-12 p-8 bg-slate-50 rounded-lg text-center">
+        <h2 class="text-xl font-bold text-gray-800 mb-2">More guides coming soon</h2>
+        <p class="text-slate-600 mb-4">
+          We're working on more tutorials covering browser automation, desktop automation, and advanced sandboxing patterns.
+        </p>
+        <a
+          href="https://discord.gg/TW7jXHyX7s"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm"
+        >
+          Join Discord for Updates
+        </a>
+      </div>
+    </div>
+  </Container>
+</Layout>

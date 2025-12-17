@@ -4,44 +4,41 @@ import Container from "@/components/container.astro";
 import Sectionhead from "@/components/sectionhead.astro";
 import PricingCard from "@/components/pricing.astro";
 
+const pageDescription = "BoxLite pricing plans for secure AI agent sandboxing. Free open-source tier for individuals, startup plans for growing teams, and enterprise solutions with dedicated support.";
+
 const pricing = [
   {
-    name: "Personal",
+    name: "Open Source",
     price: "Free",
     popular: false,
     features: [
-      "Lifetime free",
-      "Up to 3 users",
-      "Unlimited Pages",
-      "Astro Sub domain",
-      "Basic Integrations",
-      "Community Support",
+      "Full BoxLite runtime",
+      "Python, Rust, C SDKs",
+      "OCI image support",
+      "Community Discord support",
+      "GitHub Issues support",
+      "Apache 2.0 License",
     ],
     button: {
       text: "Get Started",
-      link: "/",
+      link: "https://github.com/boxlite-labs/boxlite",
     },
   },
   {
-    name: "Startup",
-    price: {
-      monthly: "$19",
-      annual: "$16",
-      discount: "10%",
-      original: "$24",
-    },
+    name: "Pro",
+    price: "Coming Soon",
     popular: true,
     features: [
-      "All Free Features",
-      "Up to 20 users",
-      "20 Custom domains",
-      "Unlimited Collaborators",
-      "Advanced Integrations",
-      "Priority Support",
+      "All Open Source features",
+      "Priority support",
+      "Extended documentation",
+      "Private Discord channel",
+      "Early access to features",
+      "Technical consultation",
     ],
     button: {
-      text: "Get Started",
-      link: "#",
+      text: "Join Waitlist",
+      link: "https://discord.gg/TW7jXHyX7s",
     },
   },
   {
@@ -49,22 +46,22 @@ const pricing = [
     price: "Custom",
     popular: false,
     features: [
-      "All Pro Features",
-      "Unlimited Custom domains",
-      "99.99% Uptime SLA",
-      "SAML & SSO Integration",
-      "Dedicated Account Manager",
-      "24/7 Phone Support",
+      "All Pro features",
+      "Dedicated support engineer",
+      "Custom feature development",
+      "SLA guarantees",
+      "Security review assistance",
+      "On-premise deployment help",
     ],
     button: {
-      text: "Contact us",
+      text: "Contact Us",
       link: "/contact",
     },
   },
 ];
 ---
 
-<Layout title="Pricing">
+<Layout title="Pricing" description={pageDescription}>
   <Container>
     <Sectionhead>
       <Fragment slot="title">Pricing</Fragment>

@@ -1,0 +1,208 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import { Icon } from "astro-icon/components";
+
+const pageDescription = "Use BoxLite for multi-tenant isolation. Run customer workloads in hardware-isolated micro-VMs. Perfect for SaaS platforms, hosting providers, and compliance-heavy applications.";
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Multi-Tenant Isolation with BoxLite",
+  "description": pageDescription,
+  "author": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  }
+};
+---
+
+<Layout
+  title="Multi-Tenant Isolation"
+  description={pageDescription}
+  schema={articleSchema}
+  breadcrumbs={[
+    { name: "Home", url: "/website" },
+    { name: "Use Cases", url: "/website/use-cases" },
+    { name: "Multi-Tenant Isolation", url: "/website/use-cases/multi-tenant" }
+  ]}
+>
+  <Container>
+    <div class="max-w-4xl mx-auto py-16">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-slate-500 mb-8">
+        <a href="/website" class="hover:text-indigo-600">Home</a>
+        <span class="mx-2">/</span>
+        <a href="/website/use-cases" class="hover:text-indigo-600">Use Cases</a>
+        <span class="mx-2">/</span>
+        <span class="text-slate-700">Multi-Tenant Isolation</span>
+      </nav>
+
+      <!-- Title -->
+      <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        Multi-Tenant Isolation
+      </h1>
+
+      <p class="text-xl text-slate-600 mb-8">
+        Hardware-level boundaries between customer workloads
+      </p>
+
+      <!-- TL;DR -->
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-12">
+        <h2 class="font-bold text-lg text-blue-900 mb-2">TL;DR</h2>
+        <p class="text-blue-800">
+          Multi-tenant applications need strong isolation between customers. A vulnerability in one tenant's
+          workload shouldn't compromise others. BoxLite's micro-VMs provide hardware-level isolation—each
+          tenant runs in their own VM with a separate kernel, making cross-tenant attacks extremely difficult.
+        </p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="prose prose-lg max-w-none">
+        <h2>The Multi-Tenant Challenge</h2>
+        <p>
+          When multiple customers share infrastructure, isolation is critical:
+        </p>
+        <ul>
+          <li><strong>Data leakage:</strong> One tenant accessing another's data</li>
+          <li><strong>Resource exhaustion:</strong> One tenant consuming all resources</li>
+          <li><strong>Noisy neighbor:</strong> One tenant's workload affecting others</li>
+          <li><strong>Lateral movement:</strong> Compromised tenant attacking others</li>
+        </ul>
+
+        <h2>Who Needs Multi-Tenant Isolation?</h2>
+        <div class="grid md:grid-cols-2 gap-4 my-6 not-prose">
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">SaaS Platforms</h3>
+            <p class="text-sm text-slate-600 mt-1">Customer workloads, plugins, and custom code execution</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Hosting Providers</h3>
+            <p class="text-sm text-slate-600 mt-1">VPS, serverless functions, and managed services</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Enterprise Applications</h3>
+            <p class="text-sm text-slate-600 mt-1">Department or team-level isolation requirements</p>
+          </div>
+          <div class="p-4 border border-slate-200 rounded-lg">
+            <h3 class="font-semibold text-gray-800">Compliance-Heavy Industries</h3>
+            <p class="text-sm text-slate-600 mt-1">Healthcare, finance, government requiring strong isolation</p>
+          </div>
+        </div>
+
+        <h2>Container vs VM Isolation</h2>
+        <p>
+          Containers (Docker, Kubernetes) provide process-level isolation but share the host kernel.
+          Container escapes have occurred (CVE-2024-21626, CVE-2020-15257, etc.), allowing attackers
+          to break out and access other tenants or the host.
+        </p>
+        <p>
+          BoxLite's micro-VMs run a separate kernel per tenant. Even if a tenant achieves a kernel
+          exploit, they're still contained within their own VM.
+        </p>
+
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th class="text-left">Isolation Level</th>
+              <th class="text-left">Containers</th>
+              <th class="text-left">BoxLite VMs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Kernel</td>
+              <td>Shared</td>
+              <td>Separate per tenant</td>
+            </tr>
+            <tr>
+              <td>Escape attack surface</td>
+              <td>Kernel syscalls</td>
+              <td>Hypervisor (minimal)</td>
+            </tr>
+            <tr>
+              <td>Noisy neighbor risk</td>
+              <td>Higher</td>
+              <td>Lower (VM scheduling)</td>
+            </tr>
+            <tr>
+              <td>Compliance readiness</td>
+              <td>May require extra controls</td>
+              <td>Strong isolation by default</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>How to Use BoxLite for Multi-Tenancy</h2>
+        <div class="bg-slate-900 rounded-lg p-4 my-4 not-prose">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code><span class="text-purple-400">import</span> boxlite
+
+<span class="text-purple-400">async def</span> <span class="text-blue-400">run_tenant_workload</span>(tenant_id: str, code: str):
+    <span class="text-slate-500"># Each tenant gets their own isolated micro-VM</span>
+    <span class="text-purple-400">async with</span> boxlite.SimpleBox(
+        image=<span class="text-green-400">"python:3.12-slim"</span>,
+        memory_mb=<span class="text-yellow-400">512</span>,
+        cpus=<span class="text-yellow-400">1</span>,
+        labels={"{"}<span class="text-green-400">"tenant_id"</span>: tenant_id{"}"}
+    ) <span class="text-purple-400">as</span> box:
+        result = <span class="text-purple-400">await</span> box.exec(<span class="text-green-400">"python"</span>, <span class="text-green-400">"-c"</span>, code)
+        <span class="text-purple-400">return</span> {"{"}
+            <span class="text-green-400">"tenant_id"</span>: tenant_id,
+            <span class="text-green-400">"output"</span>: result.stdout,
+            <span class="text-green-400">"exit_code"</span>: result.exit_code
+        {"}"}</code></pre>
+        </div>
+
+        <h2>Resource Limits</h2>
+        <p>
+          BoxLite enforces resource limits at the VM level:
+        </p>
+        <ul>
+          <li><strong>Memory:</strong> Hard limit on RAM per tenant VM</li>
+          <li><strong>CPU:</strong> CPU core and time limits</li>
+          <li><strong>Disk:</strong> Storage limits and I/O throttling</li>
+          <li><strong>Network:</strong> Bandwidth limits and isolation</li>
+        </ul>
+        <p>
+          These limits are enforced by the hypervisor, not inside the guest OS, so a malicious tenant
+          cannot bypass them.
+        </p>
+
+        <h2>Compliance Benefits</h2>
+        <p>
+          Hardware-level isolation helps with compliance requirements:
+        </p>
+        <ul>
+          <li><strong>SOC 2:</strong> Strong logical separation of customer data</li>
+          <li><strong>HIPAA:</strong> Protected health information isolation</li>
+          <li><strong>PCI DSS:</strong> Cardholder data environment separation</li>
+          <li><strong>FedRAMP:</strong> Government workload isolation</li>
+        </ul>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 p-8 bg-slate-100 rounded-lg text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Need stronger tenant isolation?</h2>
+        <p class="text-slate-600 mb-6">Learn how BoxLite can help secure your multi-tenant platform.</p>
+        <div class="flex justify-center gap-4 flex-wrap">
+          <a
+            href="/website/compare/docker"
+            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+          >
+            BoxLite vs Docker
+          </a>
+          <a
+            href="/website/faq"
+            class="inline-flex items-center px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition"
+          >
+            Read FAQ
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>

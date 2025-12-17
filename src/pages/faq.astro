@@ -1,0 +1,162 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import Sectionhead from "@/components/sectionhead.astro";
+
+const faqs = [
+  {
+    question: "What is BoxLite?",
+    answer: "BoxLite is an embeddable virtual machine runtime for secure, isolated execution environments. It lets you run AI agents and untrusted code in hardware-isolated micro-VMs—each sandbox has its own kernel, providing stronger isolation than containers. Following the SQLite philosophy, it requires no daemon and can be imported directly into your application."
+  },
+  {
+    question: "What is the difference between BoxLite and Docker?",
+    answer: "Docker containers share the host kernel using Linux namespaces, meaning a container escape vulnerability could compromise your system. BoxLite uses hardware virtualization (micro-VMs) to create true isolation boundaries—each sandbox runs its own kernel, making escape virtually impossible. Use Docker for trusted workloads; use BoxLite when running untrusted code like AI-generated scripts."
+  },
+  {
+    question: "How fast does BoxLite boot?",
+    answer: "BoxLite boots in sub-second time thanks to libkrun's lightweight micro-VM architecture. Unlike traditional VMs that take 10-30 seconds, BoxLite provides near-instant sandbox availability. Combined with layer caching for OCI images, subsequent sandbox creations are even faster."
+  },
+  {
+    question: "Can I use Docker images with BoxLite?",
+    answer: "Yes! BoxLite is fully OCI-compatible. You can use any Docker image from Docker Hub, GitHub Container Registry (GHCR), Amazon ECR, or any OCI-compliant registry. BoxLite pulls and caches image layers efficiently, so repeated use of the same base image is very fast."
+  },
+  {
+    question: "What platforms does BoxLite support?",
+    answer: "BoxLite supports macOS on Apple Silicon (M1/M2/M3/M4) using Hypervisor.framework, and Linux on both x86_64 and ARM64 architectures using KVM. Windows is not currently supported. On Linux, you need KVM access (/dev/kvm)."
+  },
+  {
+    question: "Do I need root access to run BoxLite?",
+    answer: "No! Unlike Docker which typically requires root or a daemon running as root, BoxLite runs as a regular user. On Linux, you just need access to /dev/kvm (usually by being in the 'kvm' group). On macOS, no special permissions are needed."
+  },
+  {
+    question: "What programming languages does BoxLite support?",
+    answer: "BoxLite provides official SDKs for Python (3.10+), Rust (native), and C. A Node.js SDK is in development. The Python SDK is available on PyPI (`pip install boxlite`), making it easy to integrate into AI agent frameworks, Jupyter notebooks, and production applications."
+  },
+  {
+    question: "How is BoxLite different from Firecracker?",
+    answer: "Firecracker (AWS) is a minimal hypervisor optimized for serverless workloads. BoxLite builds on similar micro-VM technology but provides a higher-level, user-friendly API with out-of-the-box OCI image support, container lifecycle management, and multiple language SDKs. Firecracker requires more setup; BoxLite is designed to be embedded directly in applications."
+  },
+  {
+    question: "How is BoxLite different from gVisor?",
+    answer: "gVisor (Google) provides isolation through a userspace kernel that intercepts syscalls. BoxLite uses hardware virtualization for true VM boundaries. gVisor is lighter but has syscall compatibility limitations; BoxLite runs a full Linux kernel so any Linux software works, at the cost of slightly higher overhead."
+  },
+  {
+    question: "What are the main use cases for BoxLite?",
+    answer: "BoxLite is ideal for: (1) AI Agent Sandboxing - safely run AI-generated code, (2) Code Execution Platforms - online judges, coding tutorials, (3) Multi-tenant Hosting - isolate customer workloads, (4) Browser/Desktop Automation - secure web scraping and UI testing, (5) Compliance - when container isolation isn't sufficient for regulatory requirements."
+  },
+  {
+    question: "Does BoxLite support networking?",
+    answer: "Yes! BoxLite includes built-in networking with full internet outbound access, port forwarding (TCP/UDP), and DNS resolution. The default networking backend is gvproxy (gVisor's user-mode network stack), with libslirp as an alternative option."
+  },
+  {
+    question: "Can I mount host directories into a BoxLite sandbox?",
+    answer: "Yes. BoxLite supports volume mounts via virtio-fs, allowing you to share host directories with sandboxes in read-only or read-write mode. You can also use persistent QCOW2 disk images that survive sandbox restarts."
+  },
+  {
+    question: "Is BoxLite open source?",
+    answer: "Yes! BoxLite is open source under the Apache License 2.0. The source code is available on GitHub at github.com/boxlite-labs/boxlite. Contributions are welcome!"
+  },
+  {
+    question: "What specialized APIs does BoxLite offer?",
+    answer: "BoxLite provides high-level APIs for common use cases: SimpleBox (foundation for custom containers), CodeBox (secure Python code execution with package installation), ComputerBox (desktop automation with screenshot, mouse, keyboard), BrowserBox (browser automation with Chromium, Firefox, WebKit), and InteractiveBox (interactive shell access)."
+  }
+];
+
+// FAQ Schema for structured data
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+};
+
+const pageDescription = "Frequently asked questions about BoxLite - the embeddable VM runtime for secure AI agent isolation. Learn about features, platforms, comparisons with Docker and Firecracker, and more.";
+---
+
+<Layout title="FAQ - Frequently Asked Questions" description={pageDescription} schema={faqSchema}>
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">Frequently Asked Questions</Fragment>
+      <Fragment slot="desc">
+        Everything you need to know about BoxLite sandboxing
+      </Fragment>
+    </Sectionhead>
+
+    <div class="max-w-4xl mx-auto mt-16">
+      <!-- TL;DR Section for GEO -->
+      <div class="bg-slate-50 rounded-lg p-6 mb-12">
+        <h2 class="font-bold text-xl text-gray-800 mb-3">TL;DR</h2>
+        <p class="text-slate-600">
+          BoxLite is an embeddable micro-VM runtime that provides hardware-isolated sandboxes for running untrusted code safely.
+          Unlike Docker (shared kernel), BoxLite gives each sandbox its own kernel. It boots in sub-seconds, supports OCI/Docker images,
+          runs on macOS Apple Silicon and Linux, and requires no daemon or root access. Available for Python, Rust, and C.
+        </p>
+      </div>
+
+      <!-- FAQ List -->
+      <div class="space-y-8">
+        {faqs.map((faq, index) => (
+          <div class="border-b border-slate-200 pb-8">
+            <h3 class="font-semibold text-xl text-gray-800 mb-3">
+              {faq.question}
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+              {faq.answer}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Related Content -->
+      <div class="mt-16 border-t border-slate-200 pt-12">
+        <h2 class="font-bold text-2xl text-gray-800 mb-6">Learn More</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          <a href="/website/guides/ai-agent-sandboxing" class="p-6 border border-slate-200 rounded-lg hover:border-indigo-300 hover:shadow-md transition">
+            <h3 class="font-semibold text-lg text-gray-800 mb-2">AI Agent Sandboxing Guide</h3>
+            <p class="text-sm text-slate-600">Complete guide to running AI agents safely in BoxLite sandboxes.</p>
+          </a>
+          <a href="/website/compare/docker" class="p-6 border border-slate-200 rounded-lg hover:border-indigo-300 hover:shadow-md transition">
+            <h3 class="font-semibold text-lg text-gray-800 mb-2">BoxLite vs Docker</h3>
+            <p class="text-sm text-slate-600">Compare BoxLite's VM isolation with Docker's container approach.</p>
+          </a>
+          <a href="/website/use-cases" class="p-6 border border-slate-200 rounded-lg hover:border-indigo-300 hover:shadow-md transition">
+            <h3 class="font-semibold text-lg text-gray-800 mb-2">Use Cases</h3>
+            <p class="text-sm text-slate-600">Discover how BoxLite solves real-world sandboxing challenges.</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- Additional CTA -->
+      <div class="mt-16 text-center">
+        <h2 class="font-bold text-2xl text-gray-800 mb-4">Still have questions?</h2>
+        <p class="text-slate-600 mb-6">
+          Join our Discord community or check out the documentation on GitHub.
+        </p>
+        <div class="flex justify-center gap-4">
+          <a
+            href="https://discord.gg/TW7jXHyX7s"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+          >
+            Join Discord
+          </a>
+          <a
+            href="https://github.com/boxlite-labs/boxlite"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition"
+          >
+            View Documentation
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>

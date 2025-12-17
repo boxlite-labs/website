@@ -4,9 +4,11 @@ import Container from "@/components/container.astro";
 import Sectionhead from "@/components/sectionhead.astro";
 import Layout from "@/layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
+
+const pageDescription = "Contact BoxLite Labs for enterprise inquiries, technical support, or partnership opportunities. Get help with secure sandboxing for AI agents and code execution.";
 ---
 
-<Layout title="Contact">
+<Layout title="Contact" description={pageDescription}>
   <Container>
     <Sectionhead>
       <Fragment slot="title">Contact</Fragment>
@@ -22,16 +24,25 @@ import { Icon } from "astro-icon/components";
         </p>
         <div class="mt-5">
           <div class="flex items-center mt-2 space-x-2 text-gray-600">
-            <Icon class="text-gray-400 w-4 h-4" name="uil:map-marker" />
-            <span>1734 Sanfransico, CA 93063</span>
-          </div><div class="flex items-center mt-2 space-x-2 text-gray-600">
             <Icon class="text-gray-400 w-4 h-4" name="uil:envelope" /><a
-              href="mailto:hello@astroshipstarter.com"
-              >hello@astroshipstarter.com</a
+              href="mailto:hello@boxlite.dev"
+              >hello@boxlite.dev</a
             >
-          </div><div class="flex items-center mt-2 space-x-2 text-gray-600">
-            <Icon class="text-gray-400 w-4 h-4" name="uil:phone" /><a
-              href="tel:+1 (987) 4587 899">+1 (987) 4587 899</a
+          </div>
+          <div class="flex items-center mt-2 space-x-2 text-gray-600">
+            <Icon class="text-gray-400 w-4 h-4" name="bx:bxl-github" /><a
+              href="https://github.com/boxlite-labs/boxlite"
+              target="_blank"
+              rel="noopener"
+              >github.com/boxlite-labs</a
+            >
+          </div>
+          <div class="flex items-center mt-2 space-x-2 text-gray-600">
+            <Icon class="text-gray-400 w-4 h-4" name="bx:bxl-discord-alt" /><a
+              href="https://discord.gg/TW7jXHyX7s"
+              target="_blank"
+              rel="noopener"
+              >Join our Discord</a
             >
           </div>
         </div>

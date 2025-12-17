@@ -1,0 +1,285 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import { Icon } from "astro-icon/components";
+
+const pageDescription = "BoxLite vs gVisor: Compare hardware virtualization with userspace kernel isolation. BoxLite uses micro-VMs for complete Linux compatibility; gVisor intercepts syscalls for lightweight sandboxing.";
+
+const comparisonSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "BoxLite vs gVisor: Hardware VMs vs Userspace Kernel",
+  "description": pageDescription,
+  "author": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://boxlite-labs.github.io/website/compare/gvisor"
+  }
+};
+---
+
+<Layout
+  title="BoxLite vs gVisor"
+  description={pageDescription}
+  schema={comparisonSchema}
+  breadcrumbs={[
+    { name: "Home", url: "/website" },
+    { name: "Compare", url: "/website/compare" },
+    { name: "BoxLite vs gVisor", url: "/website/compare/gvisor" }
+  ]}
+>
+  <Container>
+    <div class="max-w-4xl mx-auto py-16">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-slate-500 mb-8">
+        <a href="/website" class="hover:text-indigo-600">Home</a>
+        <span class="mx-2">/</span>
+        <a href="/website/compare" class="hover:text-indigo-600">Comparisons</a>
+        <span class="mx-2">/</span>
+        <span class="text-slate-700">BoxLite vs gVisor</span>
+      </nav>
+
+      <!-- Title -->
+      <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        BoxLite vs gVisor: Hardware VMs vs Userspace Kernel
+      </h1>
+
+      <!-- TL;DR -->
+      <div class="bg-purple-50 border-l-4 border-purple-500 p-6 mb-12">
+        <h2 class="font-bold text-lg text-purple-900 mb-2">TL;DR</h2>
+        <p class="text-purple-800">
+          <strong>gVisor</strong> (Google) provides isolation by intercepting syscalls in a userspace kernel—lightweight but with some syscall compatibility limitations.
+          <strong>BoxLite</strong> runs a real Linux kernel in a hardware VM—complete compatibility but slightly higher overhead.
+          Choose gVisor for container hardening when you control the workload; choose BoxLite when you need guaranteed Linux compatibility or hardware-level isolation.
+        </p>
+      </div>
+
+      <!-- Quick Comparison Table -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Quick Comparison</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="border border-slate-300 px-4 py-3 text-left">Feature</th>
+                <th class="border border-slate-300 px-4 py-3 text-center">BoxLite</th>
+                <th class="border border-slate-300 px-4 py-3 text-center">gVisor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Isolation Method</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">Hardware virtualization</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">Userspace kernel (Sentry)</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Developer</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">BoxLite Labs</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">Google</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Linux Kernel</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Real kernel per VM</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-yellow-600">Emulated (Sentry)</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Syscall Compatibility</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">100% (real kernel)</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-yellow-600">~70% of syscalls</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Startup Time</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">&lt;1 second</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">&lt;200ms</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Memory Overhead</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">~50-100MB</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">~15-30MB</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Daemon Required</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">No</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-yellow-600">runsc process</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Docker Integration</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Native OCI</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Via Docker runtime</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">macOS Support</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Yes (Apple Silicon)</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">No (Linux only)</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Best For</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-sm">Untrusted code, full compatibility</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-sm">Container hardening</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="prose prose-lg max-w-none">
+        <h2>How does gVisor work?</h2>
+        <p>
+          gVisor is an application kernel, written in Go, that implements a substantial portion of the Linux system call interface. When a container runs under gVisor:
+        </p>
+        <ol>
+          <li>The container's syscalls are intercepted by <strong>Sentry</strong> (the userspace kernel)</li>
+          <li>Sentry implements the syscall logic in userspace, never passing most calls to the host kernel</li>
+          <li>Only a small set of whitelisted syscalls reach the actual host kernel via <strong>Gofer</strong> (for filesystem) and <strong>platform</strong> (ptrace or KVM)</li>
+        </ol>
+        <p>
+          This means even if an attacker exploits a kernel vulnerability, they're exploiting gVisor's userspace kernel—not the host kernel.
+        </p>
+
+        <h2>How does BoxLite work?</h2>
+        <p>
+          BoxLite uses hardware virtualization (KVM on Linux, Hypervisor.framework on macOS) to run each sandbox in a real micro-VM:
+        </p>
+        <ol>
+          <li>Each sandbox boots a real Linux kernel (provided by libkrun)</li>
+          <li>All syscalls are handled by that kernel—100% Linux compatibility</li>
+          <li>The VM boundary prevents any access to the host kernel</li>
+        </ol>
+        <p>
+          The trade-off is slightly higher overhead (separate kernel per sandbox) in exchange for complete compatibility and a simpler security model.
+        </p>
+
+        <h2>The compatibility question</h2>
+        <p>
+          gVisor's biggest limitation is <strong>syscall compatibility</strong>. While gVisor implements ~70% of Linux syscalls, some applications fail because they use unsupported or partially-supported syscalls.
+        </p>
+        <p>Known compatibility issues with gVisor include:</p>
+        <ul>
+          <li>Some advanced networking features (raw sockets, certain ioctl calls)</li>
+          <li>Certain filesystem operations</li>
+          <li>Some GPU/hardware access patterns</li>
+          <li>Applications using obscure kernel interfaces</li>
+        </ul>
+        <p>
+          With BoxLite, there's no compatibility question—if it runs on Linux, it runs in BoxLite. The sandbox has a real kernel with full syscall support.
+        </p>
+
+        <h2>Performance comparison</h2>
+        <p>
+          gVisor has two platform modes that affect performance:
+        </p>
+        <ul>
+          <li><strong>ptrace mode:</strong> Works anywhere but slower (syscall overhead)</li>
+          <li><strong>KVM mode:</strong> Faster but requires hardware virtualization</li>
+        </ul>
+        <p>
+          BoxLite always uses hardware virtualization (KVM/Hypervisor.framework), which provides good syscall performance but adds VM boot overhead.
+        </p>
+        <p>
+          <strong>General guidance:</strong>
+        </p>
+        <ul>
+          <li>For syscall-heavy workloads: gVisor (KVM mode) may be faster</li>
+          <li>For compute-heavy workloads: Similar performance</li>
+          <li>For startup time: gVisor is faster (~200ms vs ~1s)</li>
+          <li>For memory: gVisor uses less (~15-30MB vs ~50-100MB)</li>
+        </ul>
+
+        <h2>When to use gVisor</h2>
+        <div class="bg-purple-50 p-6 rounded-lg my-6">
+          <h3 class="text-lg font-semibold text-purple-900 mt-0">Use gVisor when:</h3>
+          <ul class="text-purple-800 mb-0">
+            <li>Hardening containers you control (known-compatible workloads)</li>
+            <li>You need the lightest possible isolation overhead</li>
+            <li>Running in Google Cloud (native GKE Sandbox support)</li>
+            <li>Your workloads don't use unsupported syscalls</li>
+            <li>You want to add isolation to existing Docker/Kubernetes workflows</li>
+          </ul>
+        </div>
+
+        <h2>When to use BoxLite</h2>
+        <div class="bg-green-50 p-6 rounded-lg my-6">
+          <h3 class="text-lg font-semibold text-green-900 mt-0">Use BoxLite when:</h3>
+          <ul class="text-green-800 mb-0">
+            <li>Running arbitrary/untrusted code (AI agents, user submissions)</li>
+            <li>You need guaranteed Linux compatibility</li>
+            <li>The workload might use any syscall</li>
+            <li>Developing on macOS, deploying to Linux</li>
+            <li>You want an embeddable library (no Docker runtime changes)</li>
+            <li>Hardware-level isolation is required for compliance</li>
+          </ul>
+        </div>
+
+        <h2>Security model comparison</h2>
+        <p>Both provide strong isolation, but with different approaches:</p>
+
+        <h3>gVisor's security model</h3>
+        <ul>
+          <li>Reduces attack surface by reimplementing kernel in userspace</li>
+          <li>Host kernel only sees a small set of whitelisted operations</li>
+          <li>Vulnerabilities in Sentry don't directly compromise the host</li>
+          <li>Written in memory-safe Go (fewer memory corruption bugs)</li>
+        </ul>
+
+        <h3>BoxLite's security model</h3>
+        <ul>
+          <li>Complete isolation via hardware VM boundary</li>
+          <li>Guest kernel vulnerabilities can't reach host (different kernel)</li>
+          <li>Same isolation model as traditional VMs, but lightweight</li>
+          <li>Simpler to reason about: VM boundary = security boundary</li>
+        </ul>
+
+        <h2>Can I use both?</h2>
+        <p>
+          Potentially! You could run gVisor-protected containers inside BoxLite VMs for defense-in-depth. However, this adds overhead and complexity. In practice, choose the one that fits your needs:
+        </p>
+        <ul>
+          <li><strong>gVisor:</strong> When you want to harden existing container workflows</li>
+          <li><strong>BoxLite:</strong> When you need guaranteed compatibility or embeddable sandboxing</li>
+        </ul>
+
+        <h2>Summary</h2>
+        <p>
+          gVisor and BoxLite represent two philosophies for container security:
+        </p>
+        <ul>
+          <li><strong>gVisor:</strong> "Reimplement the kernel in userspace to reduce attack surface"</li>
+          <li><strong>BoxLite:</strong> "Use a real kernel but in a hardware-isolated VM"</li>
+        </ul>
+        <p>
+          If you're hardening known workloads and want minimal overhead, gVisor is excellent. If you're running arbitrary code and need guaranteed compatibility, BoxLite's hardware isolation is the safer bet.
+        </p>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 p-8 bg-slate-100 rounded-lg text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Ready to try BoxLite?</h2>
+        <p class="text-slate-600 mb-6">Get hardware-isolated sandboxing with full Linux compatibility.</p>
+        <div class="flex justify-center gap-4">
+          <a
+            href="https://github.com/boxlite-labs/boxlite-python-examples"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+          >
+            Get Started
+          </a>
+          <a
+            href="/website/compare"
+            class="inline-flex items-center px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition"
+          >
+            View All Comparisons
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>

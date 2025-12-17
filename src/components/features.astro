@@ -4,39 +4,45 @@ import { Icon } from "astro-icon/components";
 
 const features = [
   {
-    title: "Hardware Isolated",
+    title: "Why is BoxLite more secure than Docker?",
+    shortTitle: "Hardware Isolated",
     description:
-      "Each sandbox is a micro-VM with its own kernel. Not containers—real isolation.",
+      "Each sandbox runs in a micro-VM with its own Linux kernel. Unlike Docker containers that share the host kernel, BoxLite provides true hardware-level isolation—a VM escape is orders of magnitude harder than a container escape.",
     icon: "bx:bxs-shield",
   },
   {
-    title: "OCI Compatible",
+    title: "Can I use my existing Docker images?",
+    shortTitle: "OCI Compatible",
     description:
-      "Use any Docker image. Fast startup with layer caching.",
+      "Yes! BoxLite is fully OCI-compatible. Pull images from Docker Hub, GHCR, ECR, or any registry. Layer caching ensures fast subsequent startups.",
     icon: "bx:bxl-docker",
   },
   {
-    title: "Full Freedom Inside",
+    title: "What can code do inside a BoxLite sandbox?",
+    shortTitle: "Full Linux Environment",
     description:
-      "Complete Linux environment. Install anything. Nothing escapes.",
+      "Everything. Each sandbox is a complete Linux environment—install packages, run services, use GPUs. Full freedom inside, complete isolation outside.",
     icon: "bx:bxs-terminal",
   },
   {
-    title: "Batteries Included",
+    title: "Does BoxLite include networking and storage?",
+    shortTitle: "Batteries Included",
     description:
-      "Networking, storage, and volumes—all built-in.",
+      "Yes. Full internet access, port forwarding, DNS resolution, volume mounts, and persistent QCOW2 disks—all built-in with zero configuration required.",
     icon: "bx:bxs-package",
   },
   {
-    title: "Cross-Platform",
+    title: "What platforms does BoxLite support?",
+    shortTitle: "Cross-Platform",
     description:
-      "macOS Apple Silicon and Linux x86_64/ARM64.",
+      "macOS on Apple Silicon (M1/M2/M3/M4) via Hypervisor.framework, and Linux on x86_64 and ARM64 via KVM. No Windows support currently.",
     icon: "bx:bxs-devices",
   },
   {
-    title: "Async-First",
+    title: "Is BoxLite async/await compatible?",
+    shortTitle: "Async-First",
     description:
-      "Non-blocking I/O with real-time streaming.",
+      "Built for modern async Python and Rust. Non-blocking I/O, real-time stdout/stderr streaming, and concurrent sandbox execution.",
     icon: "bx:bxs-zap",
   },
 ];
@@ -44,20 +50,24 @@ const features = [
 
 <div class="mt-16 md:mt-0 text-center">
   <h2 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">
-    Features
+    Why Choose BoxLite?
   </h2>
+  <p class="text-xl mt-4 text-slate-600 max-w-2xl mx-auto">
+    Hardware-isolated sandboxing with the simplicity of a library
+  </p>
 </div>
 
-<div class="grid sm:grid-cols-2 md:grid-cols-3 mt-16 gap-16">
+<div class="grid sm:grid-cols-2 md:grid-cols-3 mt-16 gap-12">
   {
     features.map((item) => (
       <div class="flex gap-4 items-start">
-        <div class="mt-1 bg-black rounded-full  p-2 w-8 h-8 shrink-0">
+        <div class="mt-1 bg-black rounded-full p-2 w-8 h-8 shrink-0">
           <Icon class="text-white" name={item.icon} />
         </div>
         <div>
-          <h3 class="font-semibold text-lg">{item.title}</h3>{" "}
-          <p class="text-slate-500 mt-2 leading-relaxed">{item.description}</p>
+          <h3 class="font-semibold text-lg text-gray-800">{item.shortTitle}</h3>
+          <p class="text-sm text-slate-400 mt-1">{item.title}</p>
+          <p class="text-slate-600 mt-2 leading-relaxed">{item.description}</p>
         </div>
       </div>
     ))

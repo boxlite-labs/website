@@ -1,0 +1,250 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import { Icon } from "astro-icon/components";
+
+const pageDescription = "BoxLite vs Docker: Compare hardware-isolated micro-VMs with container isolation. Learn why BoxLite provides stronger security for AI agents and untrusted code execution while Docker excels for trusted workloads.";
+
+const comparisonSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "BoxLite vs Docker: Which Should You Use for Sandboxing?",
+  "description": pageDescription,
+  "author": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://boxlite-labs.github.io/website/compare/docker"
+  }
+};
+---
+
+<Layout
+  title="BoxLite vs Docker"
+  description={pageDescription}
+  schema={comparisonSchema}
+  breadcrumbs={[
+    { name: "Home", url: "/website" },
+    { name: "Compare", url: "/website/compare" },
+    { name: "BoxLite vs Docker", url: "/website/compare/docker" }
+  ]}
+>
+  <Container>
+    <div class="max-w-4xl mx-auto py-16">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-slate-500 mb-8">
+        <a href="/website" class="hover:text-indigo-600">Home</a>
+        <span class="mx-2">/</span>
+        <a href="/website/compare" class="hover:text-indigo-600">Comparisons</a>
+        <span class="mx-2">/</span>
+        <span class="text-slate-700">BoxLite vs Docker</span>
+      </nav>
+
+      <!-- Title -->
+      <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        BoxLite vs Docker: Which Should You Use?
+      </h1>
+
+      <!-- TL;DR - Critical for AI citation -->
+      <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 mb-12">
+        <h2 class="font-bold text-lg text-indigo-900 mb-2">TL;DR</h2>
+        <p class="text-indigo-800">
+          <strong>Use Docker</strong> for trusted application deployment where performance is critical.
+          <strong>Use BoxLite</strong> when running untrusted code (AI agents, user submissions) where security isolation is non-negotiable.
+          Docker containers share the host kernel; BoxLite sandboxes each have their own kernel via hardware virtualization.
+        </p>
+      </div>
+
+      <!-- Quick Comparison Table -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Quick Comparison</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="border border-slate-300 px-4 py-3 text-left">Feature</th>
+                <th class="border border-slate-300 px-4 py-3 text-center">BoxLite</th>
+                <th class="border border-slate-300 px-4 py-3 text-center">Docker</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Isolation Type</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">Hardware VM (micro-VM)</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">Kernel namespaces</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Kernel</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Separate per sandbox</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-yellow-600">Shared with host</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Container Escape Risk</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Near zero (VM boundary)</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">Possible (CVEs exist)</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Boot Time</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">&lt;1 second</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">&lt;100ms</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Memory Overhead</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">~50-100MB per VM</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Minimal</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Daemon Required</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">No</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">Yes (dockerd)</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Root Required</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">No (KVM access only)</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-yellow-600">Typically yes</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">OCI Image Support</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Full</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Native</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Embeddable</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Yes (library)</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">No (CLI/API)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="prose prose-lg max-w-none">
+        <h2>What's the fundamental difference?</h2>
+        <p>
+          The core difference is <strong>where isolation happens</strong>:
+        </p>
+        <ul>
+          <li><strong>Docker</strong> uses Linux kernel features (namespaces, cgroups, seccomp) to isolate processes. All containers share the same kernel as the host.</li>
+          <li><strong>BoxLite</strong> uses hardware virtualization to run each sandbox in its own micro-VM with a separate kernel. The host kernel is never exposed to sandbox code.</li>
+        </ul>
+        <p>
+          This means a vulnerability in Docker's isolation (a "container escape") could give an attacker access to the host system. With BoxLite, even if an attacker compromises the sandbox kernel, they're still trapped inside a VM with no path to the host.
+        </p>
+
+        <h2>Why does Docker's shared kernel matter?</h2>
+        <p>
+          Container escapes are real. Here are some notable Docker/container CVEs:
+        </p>
+        <ul>
+          <li><strong>CVE-2024-21626</strong> (runc) - Container escape via /proc/self/fd handling</li>
+          <li><strong>CVE-2020-15257</strong> (containerd) - Host network namespace access</li>
+          <li><strong>CVE-2019-5736</strong> (runc) - Host root access via container escape</li>
+        </ul>
+        <p>
+          If you're running trusted code you control, these risks are manageable. But for AI-generated code or user-submitted code, any container escape could be catastrophic.
+        </p>
+
+        <h2>When should you use Docker?</h2>
+        <div class="bg-blue-50 p-6 rounded-lg my-6">
+          <h3 class="text-lg font-semibold text-blue-900 mt-0">Use Docker when:</h3>
+          <ul class="text-blue-800 mb-0">
+            <li>You control all code running in containers</li>
+            <li>Maximum performance is critical</li>
+            <li>You're deploying microservices in production</li>
+            <li>You need the mature Docker ecosystem (Compose, Swarm, Kubernetes)</li>
+            <li>Boot time under 100ms is required</li>
+          </ul>
+        </div>
+
+        <h2>When should you use BoxLite?</h2>
+        <div class="bg-green-50 p-6 rounded-lg my-6">
+          <h3 class="text-lg font-semibold text-green-900 mt-0">Use BoxLite when:</h3>
+          <ul class="text-green-800 mb-0">
+            <li>Running AI-generated code (LLM agents, code interpreters)</li>
+            <li>Executing user-submitted code (online judges, tutorials)</li>
+            <li>Multi-tenant isolation is required</li>
+            <li>Compliance requires VM-level isolation (PCI-DSS, SOC2)</li>
+            <li>You need to embed sandboxing in your application (no daemon)</li>
+            <li>You can't trust the code being executed</li>
+          </ul>
+        </div>
+
+        <h2>Can I use both together?</h2>
+        <p>
+          Yes! A common pattern is:
+        </p>
+        <ul>
+          <li>Use <strong>Docker</strong> for your application infrastructure (web servers, databases, queues)</li>
+          <li>Use <strong>BoxLite</strong> inside your application to sandbox untrusted operations (AI code execution, user scripts)</li>
+        </ul>
+        <p>
+          BoxLite can run inside a Docker container, providing defense-in-depth: even if BoxLite had a vulnerability, the attacker would still be inside a Docker container.
+        </p>
+
+        <h2>Code comparison</h2>
+        <p>Here's how you'd run Python code in each:</p>
+
+        <h3>Docker (via subprocess)</h3>
+        <div class="bg-slate-900 rounded-lg p-4 my-4">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code>import subprocess
+
+# Requires Docker daemon running
+result = subprocess.run([
+    "docker", "run", "--rm",
+    "python:slim",
+    "python", "-c", "print('Hello')"
+], capture_output=True, text=True)
+
+print(result.stdout)</code></pre>
+        </div>
+
+        <h3>BoxLite (embedded)</h3>
+        <div class="bg-slate-900 rounded-lg p-4 my-4">
+          <pre class="text-sm text-slate-300 overflow-x-auto"><code>import boxlite
+
+# No daemon, just a library
+async with boxlite.SimpleBox("python:slim") as box:
+    result = await box.exec("python", "-c", "print('Hello')")
+    print(result.stdout)</code></pre>
+        </div>
+
+        <h2>Summary</h2>
+        <p>
+          Docker revolutionized deployment by making containers practical. BoxLite builds on that foundation by bringing hardware-level isolation to the same workflow—same OCI images, similar API, but with a VM boundary instead of kernel namespaces.
+        </p>
+        <p>
+          <strong>The rule is simple:</strong> Trust your code? Use Docker. Don't trust it? Use BoxLite.
+        </p>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 p-8 bg-slate-100 rounded-lg text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Ready to try BoxLite?</h2>
+        <p class="text-slate-600 mb-6">Get started with secure sandboxing in minutes.</p>
+        <div class="flex justify-center gap-4">
+          <a
+            href="https://github.com/boxlite-labs/boxlite-python-examples"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+          >
+            Get Started
+          </a>
+          <a
+            href="/website/compare"
+            class="inline-flex items-center px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition"
+          >
+            View All Comparisons
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>

@@ -14,14 +14,16 @@ const publishedBlogEntries = await getCollection("blog", ({ data }) => {
 publishedBlogEntries.sort(function (a, b) {
   return b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
 });
+
+const pageDescription = "BoxLite blog: Tutorials, guides, and insights on AI agent sandboxing, secure code execution, micro-VM technology, and best practices for running untrusted code safely.";
 ---
 
-<Layout title="Blog">
+<Layout title="Blog" description={pageDescription}>
   <Container>
     <Sectionhead>
-      <Fragment slot="title">Our Blog</Fragment>
+      <Fragment slot="title">BoxLite Blog</Fragment>
       <Fragment slot="desc">
-        We write about building startups and thoughts going on our mind.
+        Tutorials, guides, and insights on AI sandboxing and secure code execution
       </Fragment>
     </Sectionhead>
     <main class="mt-16">

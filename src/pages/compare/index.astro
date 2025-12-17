@@ -1,0 +1,174 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import Sectionhead from "@/components/sectionhead.astro";
+import { Icon } from "astro-icon/components";
+
+const comparisons = [
+  {
+    title: "BoxLite vs Docker",
+    description: "Hardware-isolated micro-VMs vs kernel-level container isolation. Learn when to use each.",
+    href: "/compare/docker",
+    icon: "bx:bxl-docker",
+    highlight: "Most Popular"
+  },
+  {
+    title: "BoxLite vs Firecracker",
+    description: "Two micro-VM approaches compared: embeddable library vs minimal hypervisor.",
+    href: "/compare/firecracker",
+    icon: "bx:bxs-server",
+    highlight: null
+  },
+  {
+    title: "BoxLite vs gVisor",
+    description: "Hardware virtualization vs userspace kernel. Different approaches to sandboxing.",
+    href: "/compare/gvisor",
+    icon: "bx:bxs-shield-alt-2",
+    highlight: null
+  }
+];
+
+const pageDescription = "Compare BoxLite with Docker, Firecracker, and gVisor. Understand the differences between hardware-isolated micro-VMs and other sandboxing technologies for AI agents and secure code execution.";
+
+const comparisonSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "BoxLite Comparisons - Docker, Firecracker, gVisor",
+  "description": pageDescription,
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": comparisons.map((comp, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": comp.title,
+      "description": comp.description,
+      "url": `https://boxlite-labs.github.io/website${comp.href}`
+    }))
+  }
+};
+---
+
+<Layout title="Comparisons" description={pageDescription} schema={comparisonSchema}>
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">How Does BoxLite Compare?</Fragment>
+      <Fragment slot="desc">
+        Understand the differences between BoxLite and other sandboxing technologies
+      </Fragment>
+    </Sectionhead>
+
+    <div class="max-w-4xl mx-auto mt-16">
+      <!-- TL;DR Section -->
+      <div class="bg-slate-50 rounded-lg p-6 mb-12">
+        <h2 class="font-bold text-xl text-gray-800 mb-3">TL;DR</h2>
+        <p class="text-slate-600 mb-4">
+          <strong>BoxLite vs Docker:</strong> Docker shares the host kernel (container escape risk); BoxLite uses hardware VMs (near-zero escape risk). Use Docker for trusted code, BoxLite for untrusted code.
+        </p>
+        <p class="text-slate-600 mb-4">
+          <strong>BoxLite vs Firecracker:</strong> Both use micro-VMs. Firecracker is a minimal hypervisor requiring orchestration; BoxLite is an embeddable library with built-in OCI support.
+        </p>
+        <p class="text-slate-600">
+          <strong>BoxLite vs gVisor:</strong> gVisor intercepts syscalls in userspace; BoxLite runs a real kernel in a VM. gVisor is lighter but has syscall compatibility limits; BoxLite runs anything Linux runs.
+        </p>
+      </div>
+
+      <!-- Comparison Cards -->
+      <div class="grid gap-6">
+        {comparisons.map((comp) => (
+          <a href={comp.href} class="block group">
+            <div class="border border-slate-200 rounded-lg p-6 hover:border-indigo-300 hover:shadow-md transition">
+              <div class="flex items-start gap-4">
+                <div class="bg-slate-100 rounded-lg p-3 group-hover:bg-indigo-100 transition">
+                  <Icon class="w-6 h-6 text-slate-600 group-hover:text-indigo-600" name={comp.icon} />
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-3">
+                    <h3 class="font-semibold text-xl text-gray-800 group-hover:text-indigo-600 transition">
+                      {comp.title}
+                    </h3>
+                    {comp.highlight && (
+                      <span class="px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-700 rounded">
+                        {comp.highlight}
+                      </span>
+                    )}
+                  </div>
+                  <p class="text-slate-600 mt-2">{comp.description}</p>
+                </div>
+                <Icon class="w-5 h-5 text-slate-400 group-hover:text-indigo-600 transition" name="bx:bx-chevron-right" />
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Quick Comparison Table -->
+      <div class="mt-16">
+        <h2 class="font-bold text-2xl text-gray-800 mb-6 text-center">Quick Comparison</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-slate-50">
+                <th class="border border-slate-200 px-4 py-3 text-left font-semibold">Feature</th>
+                <th class="border border-slate-200 px-4 py-3 text-center font-semibold">BoxLite</th>
+                <th class="border border-slate-200 px-4 py-3 text-center font-semibold">Docker</th>
+                <th class="border border-slate-200 px-4 py-3 text-center font-semibold">Firecracker</th>
+                <th class="border border-slate-200 px-4 py-3 text-center font-semibold">gVisor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Isolation Level</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Hardware VM</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-yellow-600">Kernel namespaces</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Hardware VM</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-blue-600">Userspace kernel</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Escape Risk</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Near zero</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">Container escapes exist</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Near zero</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-yellow-600">Very low</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Boot Time</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">&lt;1 second</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">&lt;100ms</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">&lt;125ms</td>
+                <td class="border border-slate-200 px-4 py-3 text-center">&lt;200ms</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Daemon Required</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">No</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">Yes</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">Yes</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">Yes (runsc)</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">OCI Images</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Native</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Native</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-yellow-600">Requires setup</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Via Docker</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="border border-slate-200 px-4 py-3 font-medium">Embeddable</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-green-600 font-medium">Yes (library)</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">No (CLI/API)</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-yellow-600">Partial</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-red-600">No</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-4 py-3 font-medium">Best For</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-sm">AI agents, untrusted code</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-sm">Trusted workloads</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-sm">Serverless at scale</td>
+                <td class="border border-slate-200 px-4 py-3 text-center text-sm">Container hardening</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>

@@ -8,20 +8,125 @@ import "../styles/global.css";
 
 export interface Props {
   title: string;
+  description?: string;
+  schema?: object;
+  breadcrumbs?: Array<{ name: string; url: string }>;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const siteURL = Astro.site?.toString() || "https://boxlite-labs.github.io/website";
 
 const resolvedImageWithDomain = new URL(
-  "/opengraph.jpg",
+  "/website/opengraph.jpg",
   Astro.site
 ).toString();
 
-const { title } = Astro.props;
+const { title, description, schema, breadcrumbs } = Astro.props;
+
+// Generate BreadcrumbList schema if breadcrumbs provided
+const breadcrumbSchema = breadcrumbs ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbs.map((crumb, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": crumb.name,
+    "item": crumb.url.startsWith("http") ? crumb.url : `${siteURL}${crumb.url}`
+  }))
+} : null;
+
+const defaultDescription = "BoxLite is an embeddable VM runtime for secure AI agent isolation. Hardware-isolated micro-VMs let you run untrusted code safely—no daemon, no dependencies, just import and sandbox.";
+
+const pageDescription = description || defaultDescription;
 
 const makeTitle = title
   ? title + " | " + "BoxLite"
-  : "BoxLite — Sandboxing Made Simple";
+  : "BoxLite — Secure Sandboxing for AI Agents";
+
+// Organization Schema - appears on all pages
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "BoxLite Labs",
+  "url": siteURL,
+  "logo": `${siteURL}/logo.png`,
+  "description": "Building secure sandboxing infrastructure for AI agents",
+  "foundingDate": "2024",
+  "sameAs": [
+    "https://github.com/boxlite-labs",
+    "https://discord.gg/TW7jXHyX7s"
+  ],
+  "knowsAbout": ["Virtualization", "Sandboxing", "AI Safety", "Container Security", "Micro-VMs"]
+};
+
+// WebSite Schema with SearchAction
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "BoxLite",
+  "url": siteURL,
+  "description": defaultDescription,
+  "publisher": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  }
+};
+
+// SoftwareApplication Schema - for homepage
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "BoxLite",
+  "alternateName": "boxlite",
+  "description": "Embeddable virtual machine runtime for secure, isolated execution environments. Run AI agents and untrusted code in hardware-isolated micro-VMs with sub-second boot times.",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": ["Virtualization", "Security", "AI Infrastructure"],
+  "operatingSystem": ["macOS 12+", "Linux"],
+  "processorRequirements": ["Apple Silicon (ARM64)", "x86_64 with KVM", "ARM64 with KVM"],
+  "softwareVersion": "0.3.0",
+  "releaseNotes": "https://github.com/boxlite-labs/boxlite/releases",
+  "downloadUrl": "https://pypi.org/project/boxlite/",
+  "installUrl": "https://github.com/boxlite-labs/boxlite#installation",
+  "codeRepository": "https://github.com/boxlite-labs/boxlite",
+  "programmingLanguage": ["Python", "Rust", "C"],
+  "runtimePlatform": ["Python 3.10+", "Rust 1.75+"],
+  "license": "https://opensource.org/licenses/Apache-2.0",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "BoxLite Labs",
+    "url": siteURL
+  },
+  "keywords": ["sandbox", "micro-vm", "AI agent", "code execution", "virtualization", "isolation", "security", "Docker alternative", "Firecracker alternative"],
+  "featureList": [
+    "Hardware-isolated micro-VMs with separate kernel",
+    "OCI/Docker image compatibility",
+    "Sub-second boot times",
+    "No daemon required - embeddable library",
+    "Python, Rust, and C SDKs",
+    "Cross-platform: macOS Apple Silicon, Linux x86_64/ARM64",
+    "Built-in networking, storage, and volumes",
+    "Async-first non-blocking I/O"
+  ]
+};
+
+// Determine which schemas to include based on page
+const isHomepage = Astro.url.pathname === "/" || Astro.url.pathname === "/website" || Astro.url.pathname === "/website/";
+let schemas = isHomepage
+  ? [organizationSchema, websiteSchema, softwareSchema]
+  : schema
+    ? [organizationSchema, schema]
+    : [organizationSchema];
+
+// Add breadcrumb schema if provided
+if (breadcrumbSchema) {
+  schemas = [...schemas, breadcrumbSchema];
+}
 ---
 
 <!doctype html>
@@ -32,10 +137,20 @@ const makeTitle = title
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
+    <!-- Additional SEO meta tags -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="BoxLite Labs" />
+    <meta name="keywords" content="BoxLite, sandbox, micro-VM, AI agent, code execution, virtualization, isolation, Docker alternative, secure code execution, AI safety" />
+
+    <!-- Google Search Console Verification - Replace YOUR_VERIFICATION_CODE with actual code -->
+    <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
+
+    <!-- Bing Webmaster Verification - Replace YOUR_VERIFICATION_CODE with actual code -->
+    <!-- <meta name="msvalidate.01" content="YOUR_VERIFICATION_CODE" /> -->
+
     <SEO
       title={makeTitle}
-      description="A single library for AI agent isolation. No daemon, no dependencies—just import and sandbox."
+      description={pageDescription}
       canonical={canonicalURL}
       twitter={{
         creator: "@boxlite",
@@ -46,14 +161,33 @@ const makeTitle = title
         basic: {
           url: canonicalURL,
           type: "website",
-          title: `BoxLite — Sandboxing Made Simple`,
+          title: makeTitle,
           image: resolvedImageWithDomain,
         },
         image: {
-          alt: "BoxLite Homepage",
+          alt: "BoxLite - Secure Sandboxing for AI Agents",
         },
       }}
     />
+
+    <!-- JSON-LD Structured Data -->
+    {schemas.map((schemaData) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+    ))}
+
+    <!-- Google Analytics - Replace GA_MEASUREMENT_ID with actual ID -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    -->
+
+    <!-- Plausible Analytics (privacy-friendly alternative) - Replace YOUR_DOMAIN -->
+    <!-- <script defer data-domain="YOUR_DOMAIN" src="https://plausible.io/js/script.js"></script> -->
   </head>
   <body>
     <Navbar />
