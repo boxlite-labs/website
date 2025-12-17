@@ -9,42 +9,42 @@ const useCases = [
     title: "AI Agent Sandboxing",
     description: "Run AI-generated code safely in hardware-isolated environments. Give AI agents full Linux freedom while guaranteeing they cannot escape to the host system.",
     icon: "bx:bxs-zap",
-    href: "/use-cases/ai-agents",
+    href: "/website/use-cases/ai-agents",
     features: ["Claude Computer Use", "GPT Code Interpreter", "AutoGPT", "AI Coding Assistants"]
   },
   {
     title: "Secure Code Execution",
     description: "Execute untrusted code from users or external sources in isolated micro-VMs. Perfect for online judges, coding platforms, and educational tools.",
     icon: "bx:bxs-terminal",
-    href: "/use-cases/code-execution",
+    href: "/website/use-cases/code-execution",
     features: ["Online Code Editors", "Coding Challenges", "Educational Platforms", "Code Playgrounds"]
   },
   {
     title: "Multi-Tenant Isolation",
     description: "Isolate customer workloads with hardware-level boundaries. Each tenant runs in their own micro-VM, preventing cross-tenant access.",
     icon: "bx:bxs-shield",
-    href: "/use-cases/multi-tenant",
+    href: "/website/use-cases/multi-tenant",
     features: ["SaaS Platforms", "Hosting Providers", "Enterprise Applications", "Compliance Requirements"]
   },
   {
     title: "Browser Automation",
     description: "Run browser automation tasks in isolated sandboxes. Safely scrape websites, run tests, and automate web interactions without risk.",
     icon: "bx:bxs-devices",
-    href: "/use-cases/browser-automation",
+    href: "/website/use-cases/browser-automation",
     features: ["Web Scraping", "E2E Testing", "Screenshot Services", "Headless Browsers"]
   },
   {
     title: "Desktop Automation",
     description: "Automate desktop interactions in isolated environments. Take screenshots, control mouse and keyboard, and test GUI applications safely.",
     icon: "bx:bxs-package",
-    href: "/use-cases/desktop-automation",
+    href: "/website/use-cases/desktop-automation",
     features: ["GUI Testing", "RPA Workflows", "Screenshot Capture", "Application Testing"]
   },
   {
     title: "Development Environments",
     description: "Create consistent, isolated development environments without Docker Desktop. Run Linux tools on macOS with native Apple Silicon performance.",
     icon: "bx:bxl-docker",
-    href: "/use-cases/development",
+    href: "/website/use-cases/development",
     features: ["Local Development", "CI/CD Pipelines", "Build Environments", "Testing Sandboxes"]
   }
 ];
@@ -76,7 +76,10 @@ const pageDescription = "BoxLite use cases: AI agent sandboxing, secure code exe
       <!-- Use Cases Grid -->
       <div class="grid md:grid-cols-2 gap-8">
         {useCases.map((useCase) => (
-          <div class="border border-slate-200 rounded-lg p-6 hover:border-indigo-300 hover:shadow-md transition">
+          <a
+            href={useCase.href}
+            class="block border border-slate-200 rounded-lg p-6 hover:border-indigo-300 hover:shadow-md transition"
+          >
             <div class="flex items-start gap-4">
               <div class="bg-indigo-100 rounded-lg p-3 shrink-0">
                 <Icon class="w-6 h-6 text-indigo-600" name={useCase.icon} />
@@ -95,7 +98,7 @@ const pageDescription = "BoxLite use cases: AI agent sandboxing, secure code exe
                 </div>
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
 

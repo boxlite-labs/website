@@ -7,15 +7,15 @@ const pageDescription = "Page not found. Explore BoxLite documentation, guides, 
 
 const popularLinks = [
   { title: "Home", description: "Return to the BoxLite homepage", href: "/website", icon: "bx:bx-home" },
-  { title: "FAQ", description: "Common questions about BoxLite", href: "/faq", icon: "bx:bx-help-circle" },
-  { title: "AI Agent Sandboxing Guide", description: "Learn how to sandbox AI agents safely", href: "/guides/ai-agent-sandboxing", icon: "bx:bxs-book" },
-  { title: "BoxLite vs Docker", description: "Compare isolation approaches", href: "/compare/docker", icon: "bx:bxl-docker" },
+  { title: "FAQ", description: "Common questions about BoxLite", href: "/website/faq", icon: "bx:bx-help-circle" },
+  { title: "AI Agent Sandboxing Guide", description: "Learn how to sandbox AI agents safely", href: "/website/guides/ai-agent-sandboxing", icon: "bx:bxs-book" },
+  { title: "BoxLite vs Docker", description: "Compare isolation approaches", href: "/website/compare/docker", icon: "bx:bxl-docker" },
   { title: "GitHub", description: "View source code and documentation", href: "https://github.com/boxlite-labs/boxlite", icon: "bx:bxl-github" },
   { title: "Discord", description: "Join the community for help", href: "https://discord.gg/TW7jXHyX7s", icon: "bx:bxl-discord-alt" },
 ];
 ---
 
-<Layout title="404 - Page Not Found" description={pageDescription}>
+<Layout title="404 - Page Not Found" description={pageDescription} noindex={true} nofollow={true}>
   <Container>
     <div class="min-h-[calc(100vh-20rem)] flex items-center justify-center py-16">
       <div class="max-w-2xl mx-auto text-center">

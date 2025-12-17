@@ -15,9 +15,46 @@ export async function getStaticPaths() {
 // Get the entry directly from the prop on render
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+
+const pageDescription = entry.data.snippet;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const resolvedOgImage = entry.data.image?.src
+  ? new URL(entry.data.image.src, Astro.site).toString()
+  : undefined;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": entry.data.title,
+  "description": pageDescription,
+  "articleSection": entry.data.category,
+  "keywords": entry.data.tags.join(", "),
+  "image": resolvedOgImage ? [resolvedOgImage] : undefined,
+  "datePublished": entry.data.publishDate.toISOString(),
+  "dateModified": entry.data.publishDate.toISOString(),
+  "mainEntityOfPage": canonicalUrl.toString(),
+  "author": {
+    "@type": "Organization",
+    "name": entry.data.author || "BoxLite Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "BoxLite Labs"
+  }
+};
 ---
 
-<Layout title={entry.data.title}>
+<Layout
+  title={entry.data.title}
+  description={pageDescription}
+  image={resolvedOgImage}
+  schema={articleSchema}
+  breadcrumbs={[
+    { name: "Home", url: "/website" },
+    { name: "Blog", url: "/website/blog" },
+    { name: entry.data.title, url: canonicalUrl.pathname }
+  ]}
+>
   <Container>
     <div class="mx-auto max-w-3xl mt-14">
       <span class="text-blue-400 uppercase tracking-wider text-sm font-medium">

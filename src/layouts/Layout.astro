@@ -11,6 +11,9 @@ export interface Props {
   description?: string;
   schema?: object;
   breadcrumbs?: Array<{ name: string; url: string }>;
+  image?: string;
+  noindex?: boolean;
+  nofollow?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
@@ -42,6 +45,11 @@ const pageDescription = description || defaultDescription;
 const makeTitle = title
   ? title + " | " + "BoxLite"
   : "BoxLite — Secure Sandboxing for AI Agents";
+
+const resolvedOgImage = Astro.props.image
+  ? new URL(Astro.props.image, siteURL).toString()
+  : resolvedImageWithDomain;
+const ogImageAlt = title ? `${title} preview image` : "BoxLite product preview";
 
 // Organization Schema - appears on all pages
 const organizationSchema = {
@@ -138,7 +146,6 @@ if (breadcrumbSchema) {
     <meta name="generator" content={Astro.generator} />
 
     <!-- Additional SEO meta tags -->
-    <meta name="robots" content="index, follow" />
     <meta name="author" content="BoxLite Labs" />
     <meta name="keywords" content="BoxLite, sandbox, micro-VM, AI agent, code execution, virtualization, isolation, Docker alternative, secure code execution, AI safety" />
 
@@ -152,21 +159,31 @@ if (breadcrumbSchema) {
       title={makeTitle}
       description={pageDescription}
       canonical={canonicalURL}
+      noindex={Astro.props.noindex}
+      nofollow={Astro.props.nofollow}
       twitter={{
         creator: "@boxlite",
         site: "@boxlite",
         card: "summary_large_image",
+        title: makeTitle,
+        description: pageDescription,
+        image: resolvedOgImage,
+        imageAlt: ogImageAlt
       }}
       openGraph={{
         basic: {
           url: canonicalURL,
           type: "website",
           title: makeTitle,
-          image: resolvedImageWithDomain,
+          image: resolvedOgImage,
         },
         image: {
-          alt: "BoxLite - Secure Sandboxing for AI Agents",
+          alt: ogImageAlt,
         },
+        optional: {
+          description: pageDescription,
+          siteName: "BoxLite"
+        }
       }}
     />
 
